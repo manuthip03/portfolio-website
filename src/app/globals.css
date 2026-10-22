@@ -1,62 +1,72 @@
 @import "tailwindcss";
 
-/* Dark mode is driven by a class on <html>, not the OS setting alone, so the
-   toggle can override the system preference. */
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* ---------------------------------------------------------------------------
-   Colour tokens.
-
-   :root holds the DARK values, because the site is dark-first.
-   :root.light overrides them. Components only ever reference the semantic
-   names (bg, surface, fg, accent...), never raw hex, so the whole site
-   re-themes from these two blocks.
+   Colour tokens. :root holds the DARK values (the site is dark-first);
+   :root.light overrides them. Components reference only semantic names, so
+   the whole site re-themes from these two blocks.
 --------------------------------------------------------------------------- */
 :root {
-  --bg: #07090c;
-  --bg-elevated: #0b0f14;
-  --surface: #111720;
-  --surface-hover: #161d28;
-  --border-subtle: #1c2430;
-  --border-strong: #2a3542;
+  --bg: #07070b;
+  --bg-elevated: #0c0d14;
+  --surface: rgba(255, 255, 255, 0.035);
+  --surface-hover: rgba(255, 255, 255, 0.06);
+  --border-subtle: rgba(255, 255, 255, 0.09);
+  --border-strong: rgba(255, 255, 255, 0.18);
 
-  --fg: #e7edf4;
-  --fg-muted: #94a3b4;
-  --fg-subtle: #64748b;
+  --fg: #edeef4;
+  --fg-muted: #9aa1b1;
+  --fg-subtle: #6b7384;
 
+  /* Two accents. Used together as a gradient, or alone for small details. */
   --accent: #2dd4bf;
-  --accent-strong: #5eead4;
-  --accent-contrast: #04231f;
-  --accent-soft: rgba(45, 212, 191, 0.12);
-  --accent-ring: rgba(45, 212, 191, 0.35);
+  --accent-2: #8b5cf6;
+  --accent-contrast: #05100f;
 
-  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.25);
+  --accent-soft: rgba(45, 212, 191, 0.14);
+  --accent-2-soft: rgba(139, 92, 246, 0.14);
+  --accent-ring: rgba(45, 212, 191, 0.4);
+
+  --glow-teal: rgba(45, 212, 191, 0.18);
+  --glow-violet: rgba(139, 92, 246, 0.16);
+
+  --grid-line: rgba(255, 255, 255, 0.045);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.5), 0 16px 48px rgba(0, 0, 0, 0.3);
+  --shadow-glow: 0 0 0 1px rgba(45, 212, 191, 0.18),
+    0 12px 48px rgba(45, 212, 191, 0.14);
 }
 
 :root.light {
-  --bg: #fcfdfe;
+  --bg: #fafbfd;
   --bg-elevated: #ffffff;
-  --surface: #ffffff;
-  --surface-hover: #f6f8fa;
-  --border-subtle: #e4e9ef;
-  --border-strong: #cdd6e0;
+  --surface: rgba(255, 255, 255, 0.85);
+  --surface-hover: #ffffff;
+  --border-subtle: rgba(13, 21, 33, 0.09);
+  --border-strong: rgba(13, 21, 33, 0.2);
 
-  --fg: #0d1521;
-  --fg-muted: #51606f;
-  --fg-subtle: #74818f;
+  --fg: #0b1220;
+  --fg-muted: #4e5a6b;
+  --fg-subtle: #76808e;
 
-  --accent: #0f766e;
-  --accent-strong: #0d9488;
+  --accent: #0d9488;
+  --accent-2: #7c3aed;
   --accent-contrast: #ffffff;
-  --accent-soft: rgba(15, 118, 110, 0.09);
-  --accent-ring: rgba(15, 118, 110, 0.3);
 
-  --shadow-card: 0 1px 2px rgba(15, 23, 42, 0.04),
-    0 8px 24px rgba(15, 23, 42, 0.06);
+  --accent-soft: rgba(13, 148, 136, 0.1);
+  --accent-2-soft: rgba(124, 58, 237, 0.1);
+  --accent-ring: rgba(13, 148, 136, 0.35);
+
+  --glow-teal: rgba(13, 148, 136, 0.12);
+  --glow-violet: rgba(124, 58, 237, 0.1);
+
+  --grid-line: rgba(13, 21, 33, 0.05);
+  --shadow-card: 0 1px 2px rgba(15, 23, 42, 0.05),
+    0 16px 48px rgba(15, 23, 42, 0.07);
+  --shadow-glow: 0 0 0 1px rgba(13, 148, 136, 0.2),
+    0 12px 48px rgba(13, 148, 136, 0.12);
 }
 
-/* Expose the tokens to Tailwind as utility classes: bg-surface, text-fg-muted,
-   border-subtle, text-accent, and so on. */
 @theme inline {
   --color-bg: var(--bg);
   --color-bg-elevated: var(--bg-elevated);
@@ -70,7 +80,7 @@
   --color-fg-subtle: var(--fg-subtle);
 
   --color-accent: var(--accent);
-  --color-accent-strong: var(--accent-strong);
+  --color-accent-2: var(--accent-2);
   --color-accent-contrast: var(--accent-contrast);
   --color-accent-soft: var(--accent-soft);
 
@@ -82,9 +92,7 @@
 
 html {
   scroll-behavior: smooth;
-  /* Stops the sticky header from covering a section heading when you jump
-     to it from the nav. */
-  scroll-padding-top: 5.5rem;
+  scroll-padding-top: 6rem;
   -webkit-text-size-adjust: 100%;
 }
 
@@ -92,8 +100,6 @@ body {
   background-color: var(--bg);
   color: var(--fg);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
-  /* Prevents a horizontal scrollbar on small screens from any decorative
-     element that sits slightly outside the viewport. */
   overflow-x: hidden;
 }
 
@@ -102,15 +108,29 @@ body {
   color: var(--fg);
 }
 
-/* A single, consistent focus ring for every interactive element. Visible for
-   keyboard users, invisible for mouse users. */
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
-  border-radius: 4px;
+  border-radius: 6px;
 }
 
-/* Honour the operating system's "reduce motion" accessibility setting. */
+/* Slim, themed scrollbar. */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 99px;
+  border: 2px solid var(--bg);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -124,18 +144,104 @@ body {
   }
 }
 
-/* ---------------------------------------------------------------- helpers */
+/* ------------------------------------------------------------- utilities */
 
-/* Soft radial glow used behind the hero. Purely decorative. */
-.hero-glow {
-  background-image: radial-gradient(
-    60% 50% at 50% 0%,
-    var(--accent-soft) 0%,
-    transparent 70%
+/* Headline text filled with the teal-to-violet gradient. */
+.text-gradient {
+  background-image: linear-gradient(
+    110deg,
+    var(--fg) 0%,
+    var(--accent) 45%,
+    var(--accent-2) 80%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* Stops descenders (g, y, p) being visually clipped in some browsers. */
+  padding-bottom: 0.08em;
+}
+
+.text-gradient-accent {
+  background-image: linear-gradient(110deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Frosted panel. */
+.glass {
+  background-color: var(--surface);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-subtle);
+}
+
+/* A 1px gradient outline, drawn in a pseudo-element so the card keeps its own
+   background. The mask trick punches out the middle, leaving just the edge. */
+.gradient-ring {
+  position: relative;
+}
+.gradient-ring::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    var(--accent),
+    var(--accent-2) 55%,
+    transparent 85%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+.gradient-ring:hover::before,
+.gradient-ring:focus-within::before {
+  opacity: 1;
+}
+
+/* Faint graph-paper grid, faded out towards the edges. */
+.grid-bg {
+  background-image:
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image: radial-gradient(
+    ellipse 70% 60% at 50% 0%,
+    #000 20%,
+    transparent 75%
+  );
+  mask-image: radial-gradient(
+    ellipse 70% 60% at 50% 0%,
+    #000 20%,
+    transparent 75%
   );
 }
 
-/* Hairline divider that fades out at both ends. */
+/* Dotted variant, used behind lower sections. */
+.dot-bg {
+  background-image: radial-gradient(var(--grid-line) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* Blurred colour blob. Purely decorative. */
+.orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(80px);
+  pointer-events: none;
+}
+
 .rule-fade {
   background-image: linear-gradient(
     to right,
@@ -144,4 +250,74 @@ body {
     var(--border-subtle) 85%,
     transparent
   );
+}
+
+/* --------------------------------------------------------------- motion */
+
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(0, -22px, 0) scale(1.04);
+  }
+}
+
+@keyframes float-slower {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1.03);
+  }
+  50% {
+    transform: translate3d(14px, 18px, 0) scale(1);
+  }
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 var(--accent-soft);
+  }
+  70% {
+    box-shadow: 0 0 0 10px transparent;
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+.animate-float-slow {
+  animation: float-slow 14s ease-in-out infinite;
+}
+.animate-float-slower {
+  animation: float-slower 18s ease-in-out infinite;
+}
+.animate-pulse-ring {
+  animation: pulse-ring 2.6s ease-out infinite;
+}
+
+/* Sweeping highlight used on the "available" badge. */
+.shimmer-text {
+  background-image: linear-gradient(
+    90deg,
+    var(--fg-muted) 0%,
+    var(--fg-muted) 40%,
+    var(--fg) 50%,
+    var(--fg-muted) 60%,
+    var(--fg-muted) 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 6s linear infinite;
 }
