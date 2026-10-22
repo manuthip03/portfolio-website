@@ -1,26 +1,147 @@
 @import "tailwindcss";
 
+/* Dark mode is driven by a class on <html>, not the OS setting alone, so the
+   toggle can override the system preference. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---------------------------------------------------------------------------
+   Colour tokens.
+
+   :root holds the DARK values, because the site is dark-first.
+   :root.light overrides them. Components only ever reference the semantic
+   names (bg, surface, fg, accent...), never raw hex, so the whole site
+   re-themes from these two blocks.
+--------------------------------------------------------------------------- */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #07090c;
+  --bg-elevated: #0b0f14;
+  --surface: #111720;
+  --surface-hover: #161d28;
+  --border-subtle: #1c2430;
+  --border-strong: #2a3542;
+
+  --fg: #e7edf4;
+  --fg-muted: #94a3b4;
+  --fg-subtle: #64748b;
+
+  --accent: #2dd4bf;
+  --accent-strong: #5eead4;
+  --accent-contrast: #04231f;
+  --accent-soft: rgba(45, 212, 191, 0.12);
+  --accent-ring: rgba(45, 212, 191, 0.35);
+
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.25);
 }
 
+:root.light {
+  --bg: #fcfdfe;
+  --bg-elevated: #ffffff;
+  --surface: #ffffff;
+  --surface-hover: #f6f8fa;
+  --border-subtle: #e4e9ef;
+  --border-strong: #cdd6e0;
+
+  --fg: #0d1521;
+  --fg-muted: #51606f;
+  --fg-subtle: #74818f;
+
+  --accent: #0f766e;
+  --accent-strong: #0d9488;
+  --accent-contrast: #ffffff;
+  --accent-soft: rgba(15, 118, 110, 0.09);
+  --accent-ring: rgba(15, 118, 110, 0.3);
+
+  --shadow-card: 0 1px 2px rgba(15, 23, 42, 0.04),
+    0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+/* Expose the tokens to Tailwind as utility classes: bg-surface, text-fg-muted,
+   border-subtle, text-accent, and so on. */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-bg: var(--bg);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-subtle: var(--border-subtle);
+  --color-strong: var(--border-strong);
+
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-subtle: var(--fg-subtle);
+
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-contrast: var(--accent-contrast);
+  --color-accent-soft: var(--accent-soft);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ------------------------------------------------------------------ base */
+
+html {
+  scroll-behavior: smooth;
+  /* Stops the sticky header from covering a section heading when you jump
+     to it from the nav. */
+  scroll-padding-top: 5.5rem;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  /* Prevents a horizontal scrollbar on small screens from any decorative
+     element that sits slightly outside the viewport. */
+  overflow-x: hidden;
+}
+
+::selection {
+  background-color: var(--accent-ring);
+  color: var(--fg);
+}
+
+/* A single, consistent focus ring for every interactive element. Visible for
+   keyboard users, invisible for mouse users. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Honour the operating system's "reduce motion" accessibility setting. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---------------------------------------------------------------- helpers */
+
+/* Soft radial glow used behind the hero. Purely decorative. */
+.hero-glow {
+  background-image: radial-gradient(
+    60% 50% at 50% 0%,
+    var(--accent-soft) 0%,
+    transparent 70%
+  );
+}
+
+/* Hairline divider that fades out at both ends. */
+.rule-fade {
+  background-image: linear-gradient(
+    to right,
+    transparent,
+    var(--border-subtle) 15%,
+    var(--border-subtle) 85%,
+    transparent
+  );
 }
